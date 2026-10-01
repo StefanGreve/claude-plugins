@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
+  "name": "stefangreve-plugins",
+  "description": "Personal Claude Code plugins: conventions and tooling I use across my own projects",
+  "owner": {
+    "name": "Stefan Greve",
+    "url": "https://github.com/StefanGreve"
+  },
+  "plugins": [
+    {
+      "name": "devkit",
+      "source": "./plugins/devkit",
+      "description": "Personal development conventions for Claude Code",
+      "category": "conventions"
+    }
+  ]
+}
