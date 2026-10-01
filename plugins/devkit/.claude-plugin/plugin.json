@@ -1,8 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "devkit",
-  "version": "0.1.0",
-  "description": "Personal development conventions: git commit messages, with room for language-specific style rules",
+  "version": "0.2.0",
+  "description": "Personal skills that drive my day-to-day workflow with Claude",
   "author": {
     "name": "Stefan Greve",
     "email": "stefan.ohlsen.greve@gmail.com"
@@ -11,8 +11,8 @@
   "repository": "https://github.com/StefanGreve/claude-plugins",
   "license": "MIT",
   "keywords": [
-    "git",
     "conventions",
-    "commit-messages"
+    "workflow",
+    "productivity"
   ]
 }

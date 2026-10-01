@@ -10,7 +10,7 @@
     {
       "name": "devkit",
       "source": "./plugins/devkit",
-      "description": "Personal development conventions for Claude Code",
+      "description": "Personal skills that drive my day-to-day workflow with Claude",
       "category": "conventions"
     }
   ]

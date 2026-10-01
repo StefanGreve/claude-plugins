@@ -12,18 +12,19 @@ will not match your own house style out of the box.
 Register the marketplace, then install the plugin:
 
 ```sh
-claude plugin marketplace add StefanGreve/claude-plugins
+claude plugin marketplace add stefangreve/claude-plugins
 claude plugin install devkit@stefangreve-plugins
 ```
 
 ## Plugins
 
-| Plugin   | Skill                      | Purpose                                            |
-| -------- | -------------------------- | -------------------------------------------------- |
-| `devkit` | `/devkit:commit-message`   | Write a commit message in my conventions           |
+| Plugin   | Purpose                                                       |
+| -------- | ------------------------------------------------------------- |
+| `devkit` | Personal skills that drive my day-to-day workflow with Claude |
 
-Claude loads a skill on its own when the request matches its description, so the
-slash command is a shortcut rather than the only entry point.
+Claude loads a skill on its own when the request matches its description, so a
+slash command is a shortcut rather than the only entry point. Run `claude plugin
+details devkit@stefangreve-plugins` for the current inventory.
 
 ## Development
 
