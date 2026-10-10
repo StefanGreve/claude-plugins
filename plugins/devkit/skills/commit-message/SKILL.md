@@ -1,11 +1,11 @@
 ---
 name: commit-message
-description: Write a git commit message in Stefan's conventions, using the short single-line form for small
-  self-contained changes and the verbose summary-plus-bullets form for larger ones, with a Co-authored-by
-  trailer when Claude wrote the majority of the code.
+description: Write a git commit message in Stefan's conventions, using the short single-line form by default
+  and the verbose summary-plus-bullets form when `verbose` is requested, with a Co-authored-by trailer on
+  verbose messages when Claude wrote the majority of the code.
 when_to_use: After completing a task in a git repository, or whenever asked to suggest, write, reword, or
   review a commit message.
-argument-hint: "[atomic]"
+argument-hint: "[atomic] [short|verbose]"
 allowed-tools:
   - Bash(git status:*)
   - Bash(git diff:*)
@@ -37,16 +37,19 @@ nothing else.
 
 ## Choose the form
 
-Pick by the size and shape of the change, not by preference.
+The invocation selects the form. `verbose` selects the verbose form; `short`, or no form argument at all,
+selects the short form. Do not switch to the verbose form because the change is large: the size of the diff
+has no bearing on the form.
 
-**Short** - a single-line summary. Use it for a small, self-contained change.
+**Short** - a single-line summary. This is the default. A large change still gets one line, which names the
+dominant intent of the change rather than listing its parts.
 
 ```text
 Strip comment
 ```
 
-**Verbose** - a summary line, a blank line, then `*` bullet points. Use it for a larger change, or one
-spanning multiple files.
+**Verbose** - a summary line, a blank line, then `*` bullet points. Use it only when the invocation includes
+`verbose`.
 
 ```text
 Harden Claude Code settings for macOS and Windows
@@ -67,6 +70,8 @@ Harden Claude Code settings for macOS and Windows
   `Update CLAUDE.md: refine language output`. Do not reach for it by default.
 
 ## Bullets
+
+These rules apply to the verbose form only.
 
 - One `* ` per bullet, continuation lines indented by two spaces.
 - No blank line between bullets, no trailing period.
@@ -97,7 +102,8 @@ When the invocation includes `atomic`, judge whether the staged set is one chang
 anything. Where it divides cleanly along lines of intent - a bug fix beside an unrelated rename, a dependency
 bump beside the feature that needed it - propose one commit per concern rather than a single message.
 
-- Give each proposed commit its paths and its own message, written to the rules above.
+- Give each proposed commit its paths and its own message, written to the rules above and in the form the
+  invocation selected.
 - Order them so that every commit leaves the tree in a working state. A commit that only compiles once a
   later one lands is not atomic, merely split.
 - Follow the proposals with the `git restore --staged` and `git add` commands that carve the present index
