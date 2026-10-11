@@ -6,6 +6,8 @@ description: Write a git commit message in Stefan's conventions, using the short
 when_to_use: After completing a task in a git repository, or whenever asked to suggest, write, reword, or
   review a commit message.
 argument-hint: "[atomic] [short|verbose]"
+model: haiku
+effort: medium
 allowed-tools:
   - Bash(git status:*)
   - Bash(git diff:*)
@@ -87,14 +89,16 @@ These rules apply to the verbose form only.
 
 ## Trailer
 
-When Claude wrote the majority of the code, end a verbose message with a trailer naming the model it is
-running as, separated from the bullets by a blank line:
+When Claude wrote the majority of the code, end a verbose message with a trailer naming the model that wrote
+it, separated from the bullets by a blank line:
 
 ```text
 Co-authored-by: Claude Opus 5 <noreply@anthropic.com>
 ```
 
-Name the actual model of the current session. The short form takes no trailer.
+This skill runs on Haiku whatever the session model is, so the model you are running as is not necessarily
+the one that wrote the code. Name the model only when the conversation establishes which one wrote the code;
+otherwise omit the trailer rather than guess. The short form takes no trailer.
 
 ## Atomic commits
 
