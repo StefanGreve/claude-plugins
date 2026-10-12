@@ -12,13 +12,31 @@ allowed-tools:
   - Bash(git status:*)
   - Bash(git diff:*)
   - Bash(git log:*)
+  - Bash(git branch:*)
   - Bash(git check-ignore:*)
 ---
 
 # Commit message
 
-Suggest a commit message in chat. Do not run `git commit` unless explicitly asked to; this skill produces the
-message, not the commit.
+Return the commit message and nothing else: a single fenced `text` block, with no preamble, explanation, or
+follow-up. The invoker copies it as is, so anything around it is noise. Two cases are exempt: an empty index,
+which gets one sentence instead, and `atomic`, which keeps the output described in its section.
+
+Do not run `git commit` unless explicitly asked to; this skill produces the message, not the commit.
+
+## Read the repository's conventions
+
+Run `git branch --show-current` and `git log -10 --format=%s` before writing anything. The rules below are
+defaults; the history shows what this repository actually does.
+
+- Look for patterns the subjects share: ticket prefixes (`ABC-123: `, `[ABC-123] `, `#123 `), Conventional
+  Commits `type(scope):` prefixes, capitalization, and language.
+- When the history prefixes subjects with ticket references and the branch name carries one, as in
+  `feature/ABC-123-export-csv`, prefix the summary with that ticket in the format the history uses. A ticket
+  in the branch name alone is not a convention; without the matching history, leave it out.
+- A pattern counts as a convention when most of the ten subjects follow it, not when a single one does. Where
+  a convention is clear, it overrides the summary line rules below. Where the history is mixed or silent,
+  apply those rules as written.
 
 ## Establish what the commit records
 
@@ -26,16 +44,15 @@ The invoker stages what they want committed, so the index defines the message. R
 the shape of the tree, then `git diff --staged` to read the change itself. Describe the staged set and
 nothing else.
 
-- When nothing is staged, say so and stop. Do not fall back to `git diff` and describe the working tree: with
-  an empty index there is no commit to name, and a message written against unstaged work will not match what
-  eventually lands.
-- Unstaged and untracked paths stay out of the message, however relevant they look. They belong in the
-  suggestion that follows it.
+- When nothing is staged, reply with one sentence saying so and stop. Do not fall back to `git diff` and
+  describe the working tree: with an empty index there is no commit to name, and a message written against
+  unstaged work will not match what eventually lands.
+- Unstaged and untracked paths stay out of the message, however relevant they look.
 - A staged file you did not write is still part of the commit. Staging is the filter, not authorship.
 - Skip git-ignored files. `todo.md` and `notes.md` are ignored globally and never belong in a message.
   `git check-ignore -v <path>` settles any doubt.
-- When the staged set spans unrelated concerns, write the message for all of it and say that it does. That is
-  the case `atomic` below exists to handle.
+- When the staged set spans unrelated concerns, write one message that covers all of it. Splitting it is the
+  case `atomic` below exists to handle.
 
 ## Choose the form
 
@@ -65,9 +82,11 @@ Harden Claude Code settings for macOS and Windows
 
 ## Summary line
 
-- Imperative mood, capitalised, no trailing period.
-- At most 72 characters.
-- No `type(scope):` prefix. This project does not follow Conventional Commits.
+A convention read from the repository's history takes precedence over the rules in this section.
+
+- Imperative mood, capitalized, no trailing period.
+- At most 72 characters, including any ticket prefix.
+- No `type(scope):` prefix, unless the repository's history uses one.
 - A `Subject: detail` prefix is available when it genuinely narrows the scope, as in
   `Update CLAUDE.md: refine language output`. Do not reach for it by default.
 
@@ -104,7 +123,8 @@ otherwise omit the trailer rather than guess. The short form takes no trailer.
 
 When the invocation includes `atomic`, judge whether the staged set is one change or several before writing
 anything. Where it divides cleanly along lines of intent - a bug fix beside an unrelated rename, a dependency
-bump beside the feature that needed it - propose one commit per concern rather than a single message.
+bump beside the feature that needed it - propose one commit per concern rather than a single message. This
+mode is exempt from the message-only rule and returns the output described here.
 
 - Give each proposed commit its paths and its own message, written to the rules above and in the form the
   invocation selected.
@@ -115,11 +135,3 @@ bump beside the feature that needed it - propose one commit per concern rather t
 
 When the staged set is already one coherent change, say so and suggest the single message. Splitting a change
 whose parts only make sense together is worse than leaving it whole.
-
-## Suggest what else belongs in the commit
-
-After the message, name any unstaged path the staged change left incomplete: a test for the new function, a
-stale `CHANGELOG.md` or `README.md` entry. One line each, then stop.
-
-Say nothing about the rest of the working tree. Scratch files, editor directories, and unrelated work in
-progress are noise the invoker left unstaged on purpose. Having nothing to add is the ordinary case.
