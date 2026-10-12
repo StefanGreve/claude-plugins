@@ -5,6 +5,8 @@ description: Conventions for the todo.md task list at a repository root, coverin
 when_to_use: Whenever a markdown file other than repository boilerplate is read or edited, and whenever a task
   tracked in todo.md is finished.
 user-invocable: false
+model: haiku
+effort: medium
 paths:
   - "**/*.md"
   - "!**/readme.md"
