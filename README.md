@@ -18,9 +18,10 @@ claude plugin install devkit@stefangreve-plugins
 
 ## Plugins
 
-| Plugin   | Purpose                                                       |
-| -------- | ------------------------------------------------------------- |
-| `devkit` | Personal skills that drive my day-to-day workflow with Claude |
+| Plugin   | Purpose                                                        |
+| -------- | -------------------------------------------------------------- |
+| `devkit` | Personal skills that drive my day-to-day workflow with Claude  |
+| `gelyn`  | Companion skills for authoring and configuring a gelyn blog    |
 
 Claude loads a skill on its own when the request matches its description, so a
 slash command is a shortcut rather than the only entry point. Run `claude plugin

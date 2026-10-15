@@ -12,6 +12,16 @@
       "source": "./plugins/devkit",
       "description": "Personal skills that drive my day-to-day workflow with Claude",
       "category": "conventions"
+    },
+    {
+      "name": "gelyn",
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/StefanGreve/gelyn",
+        "path": "plugins/gelyn"
+      },
+      "description": "Companion skills for authoring and configuring a gelyn blog",
+      "category": "scaffolding"
     }
   ]
 }
