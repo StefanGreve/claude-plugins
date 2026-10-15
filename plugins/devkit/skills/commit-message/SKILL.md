@@ -1,11 +1,11 @@
 ---
 name: commit-message
-description: Write a git commit message in Stefan's conventions, using the short single-line form by default
-  and the verbose summary-plus-bullets form when `verbose` is requested, with a Co-authored-by trailer on
-  verbose messages when Claude wrote the majority of the code.
+description: Write a git commit message in Stefan's conventions, using the one-line `minimal` form by default
+  and the bulleted `normal`, `verbose`, or `detailed` forms on request, with a Co-authored-by trailer on
+  multiline messages when Claude wrote the majority of the code.
 when_to_use: After completing a task in a git repository, or whenever asked to suggest, write, reword, or
   review a commit message.
-argument-hint: "[atomic] [short|verbose]"
+argument-hint: "[atomic] [minimal|normal|verbose|detailed]"
 model: haiku
 effort: medium
 allowed-tools:
@@ -56,19 +56,38 @@ nothing else.
 
 ## Choose the form
 
-The invocation selects the form. `verbose` selects the verbose form; `short`, or no form argument at all,
-selects the short form. Do not switch to the verbose form because the change is large: the size of the diff
-has no bearing on the form.
+The invocation selects the form; without a form argument, use `minimal`. Do not switch to a longer form
+because the change is large: the size of the diff has no bearing on the form.
 
-**Short** - a single-line summary. This is the default. A large change still gets one line, which names the
-dominant intent of the change rather than listing its parts.
+| Form       | Body                                         | Bullets               | Lines per bullet |
+|------------|----------------------------------------------|-----------------------|------------------|
+| `minimal`  | Summary line only                            | none                  | -                |
+| `normal`   | Summary line, blank line, bullets            | 2-3                   | 1-2              |
+| `verbose`  | As `normal`                                  | up to 4, prefer fewer | 2-3              |
+| `detailed` | As `verbose`, plus an optional ASCII diagram | up to 6               | 3-5              |
+
+The limits are ceilings, not quotas. Never pad a bullet to reach a line count, and when a change has less to
+say than the form allows, write fewer bullets in the requested form rather than switching to another.
+
+**minimal** - a single-line summary. A large change still gets one line, which names the dominant intent of
+the change rather than listing its parts.
 
 ```text
 Strip comment
 ```
 
-**Verbose** - a summary line, a blank line, then `*` bullet points. Use it only when the invocation includes
-`verbose`.
+**normal** - a summary line, a blank line, then two or three `*` bullets of one or two lines each.
+
+```text
+Pin pwsh to its absolute path in the reminder task
+
+* Task Scheduler resolves actions against the service PATH, which cannot see
+  the per-user WindowsApps alias
+* Keep the working directory unset so relative paths fail loudly
+```
+
+**verbose** - as `normal`, but each bullet runs two to three lines and the message holds at most four
+bullets. Prefer fewer when they cover the change.
 
 ```text
 Harden Claude Code settings for macOS and Windows
@@ -78,6 +97,26 @@ Harden Claude Code settings for macOS and Windows
   mode on and blocked /schedule. Unsetting it is the only way to turn it off
 * Set disableBypassPermissionsMode to "disable" so bypassPermissions can no
   longer be selected
+```
+
+**detailed** - as `verbose`, but each bullet runs three to five lines and the message holds at most six
+bullets. Add an ASCII diagram only when it shows structure that prose conveys poorly, such as a data flow, a
+state transition, or a directory layout; most detailed messages need none. Place it after the bullets,
+separated by a blank line, indent it by two spaces, and keep its lines within 80 characters.
+
+```text
+Route reminder output through the shared log writer
+
+* Write task output through LogWriter instead of redirecting stdout, since
+  Task Scheduler discards the redirect when the action runs without an
+  interactive session, which left failed runs without any trace
+* Send errors to both the log file and the Application event log, so a
+  failure stays visible even when the log directory is missing or locked
+  by another process
+
+  Reminder.ps1 --> LogWriter --+--> %LOCALAPPDATA%\Reminder\reminder.log
+                               |
+                               +--> Application event log (errors only)
 ```
 
 ## Summary line
@@ -92,7 +131,7 @@ A convention read from the repository's history takes precedence over the rules 
 
 ## Bullets
 
-These rules apply to the verbose form only.
+These rules apply to every form except `minimal`.
 
 - One `* ` per bullet, continuation lines indented by two spaces.
 - No blank line between bullets, no trailing period.
@@ -108,7 +147,7 @@ These rules apply to the verbose form only.
 
 ## Trailer
 
-When Claude wrote the majority of the code, end a verbose message with a trailer naming the model that wrote
+When Claude wrote the majority of the code, end a multiline message with a trailer naming the model that wrote
 it, separated from the bullets by a blank line:
 
 ```text
@@ -117,7 +156,7 @@ Co-authored-by: Claude Opus 5 <noreply@anthropic.com>
 
 This skill runs on Haiku whatever the session model is, so the model you are running as is not necessarily
 the one that wrote the code. Name the model only when the conversation establishes which one wrote the code;
-otherwise omit the trailer rather than guess. The short form takes no trailer.
+otherwise omit the trailer rather than guess. The `minimal` form takes no trailer.
 
 ## Atomic commits
 
