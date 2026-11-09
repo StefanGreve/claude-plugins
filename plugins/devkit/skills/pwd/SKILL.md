@@ -3,7 +3,9 @@ name: pwd
 description: Print the full path of the current working directory.
 when_to_use: When asked for the current working directory.
 disable-model-invocation: true
-allowed-tools: Bash(pwd), Bash(pwd *)
+allowed-tools:
+  - Bash(pwd)
+  - Bash(pwd *)
 model: haiku
 effort: low
 ---
