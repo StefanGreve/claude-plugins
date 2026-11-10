@@ -49,6 +49,14 @@ end of `--parent`, which defaults to `threads`. `source` adds or updates one Sou
 `list` prints every region with the first line of its body. Every call locks the file, so parallel calls from
 subagents are safe.
 
+## Source order
+
+Every thread starts with the files on disk: the source code, tests, configuration, documentation, and the git
+history of the working directory. Source code of dependencies that is present on disk, such as a package cache
+or a vendored copy, counts as on disk too. Turn to the web only for what these files cannot settle, for example
+the intended behavior of an external API, the changes in a release, or a known issue upstream. Before citing a
+web source, name the question that the files on disk left open.
+
 ## Threads
 
 Run `init`. When the file already existed, run `list` and research only what its threads leave open.
@@ -73,13 +81,16 @@ A subagent sees none of this conversation, so its prompt must stand on its own:
   - <Finding. Name the source that confirms it, as listed in Sources.>
 
   **Confidence:** <high, medium, or low>, because <reason>.
-  **Gaps:** <what this thread could not settle, or "None.">
+  **Gaps:** <what this thread could not settle, on disk or on the web, or "None.">
   ```
 
-- These rules, verbatim: "Upsert your thread with `Status: in progress` before you start. Upsert each source as
-  soon as you have confirmed it. Finish by upserting the complete thread block with `Status: done`, or with
-  `Status: blocked` and the reason. Cite only URLs you fetched and files you read during this run. Do not
-  modify any file except through upsert.py. Return a one-paragraph summary of your thread."
+- These rules, verbatim: "Upsert your thread with `Status: in progress` before you start. Search the working
+  directory first, including the source of dependencies on disk, and use WebSearch or WebFetch only for a
+  question that the files on disk cannot settle. Name that question in your findings before citing a web source
+  for it. Upsert each source as soon as you have confirmed it. Finish by upserting the complete thread block
+  with `Status: done`, or with `Status: blocked` and the reason. Cite only URLs you fetched and files you read
+  during this run. Do not modify any file except through upsert.py. Return a one-paragraph summary of your
+  thread."
 
 ## Synthesis
 
